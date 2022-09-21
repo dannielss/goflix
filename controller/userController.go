@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/dannielss/goflix/database"
 	"github.com/dannielss/goflix/model"
+	"github.com/dannielss/goflix/repository"
 	"github.com/gin-gonic/gin"
 )
 
-func Show(c *gin.Context) {
+func ShowUsers(c *gin.Context) {
 	var users []model.User
 
-	rows, err := database.DBCon.Query("SELECT * FROM users")
+	rows, err := repository.ShowAll()
 
 	if err != nil {
 		fmt.Printf("Error %s", err)
@@ -37,5 +37,24 @@ func Show(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"users": users,
+	})
+}
+
+func AddUser(c *gin.Context) {
+	var user model.User
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := repository.Insert(user)
+
+	if err != nil {
+		fmt.Printf("Error %s", err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User added successfuly",
 	})
 }
