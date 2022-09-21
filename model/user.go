@@ -1,8 +1,8 @@
 package model
 
-type user struct {
-	Id       int
-	Name     string
-	Email    string
-	Password string
+type User struct {
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
