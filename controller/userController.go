@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/dannielss/goflix/model"
 	"github.com/dannielss/goflix/repository"
@@ -52,9 +53,37 @@ func AddUser(c *gin.Context) {
 
 	if err != nil {
 		fmt.Printf("Error %s", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Something wrong",
+		})
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User added successfuly",
+	})
+}
+
+func DeleteUser(c *gin.Context) {
+	idAsString := c.Param("id")
+
+	id, err := strconv.Atoi(idAsString)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Something wrong",
+		})
+	}
+
+	error := repository.Delete(id)
+
+	if error != nil {
+		fmt.Printf("Error %s", error)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Something wrong",
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User deleted successfuly",
 	})
 }

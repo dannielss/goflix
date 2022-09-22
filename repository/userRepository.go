@@ -28,3 +28,14 @@ func Insert(u model.User) error {
 
 	return nil
 }
+
+func Delete(id int) error {
+	query := "DELETE FROM users WHERE id = ?"
+	_, err := database.DBCon.Exec(query, id)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
