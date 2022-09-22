@@ -29,13 +29,37 @@ func Insert(u model.User) error {
 	return nil
 }
 
-func Delete(id int) error {
-	query := "DELETE FROM users WHERE id = ?"
-	_, err := database.DBCon.Exec(query, id)
+func Update(u model.User) (int64, error) {
+	query := "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?"
+
+	res, err := database.DBCon.Exec(query, u.Name, u.Email, u.Password, u.Id)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	val, error := res.RowsAffected()
+
+	if error != nil {
+		return 0, error
+	}
+
+	return val, nil
+}
+
+func Delete(id int) (int64, error) {
+	query := "DELETE FROM users WHERE id = ?"
+	res, err := database.DBCon.Exec(query, id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	val, error := res.RowsAffected()
+
+	if error != nil {
+		return 0, error
+	}
+
+	return val, nil
 }

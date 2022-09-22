@@ -30,6 +30,7 @@ func ShowUsers(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"message": "Something wrong",
 			})
+			return
 		}
 
 		users = append(users, user)
@@ -56,10 +57,54 @@ func AddUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Something wrong",
 		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "User added successfuly",
+	})
+}
+
+func UpdateUser(c *gin.Context) {
+	var user model.User
+
+	idAsString := c.Param("id")
+
+	id, err := strconv.Atoi(idAsString)
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Something wrong",
+		})
+		return
+	}
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user.Id = id
+
+	val, error := repository.Update(user)
+
+	if error != nil {
+		fmt.Printf("Error %s", error)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Something wrong",
+		})
+		return
+	}
+
+	if val == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "User not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User updated successfuly",
 	})
 }
 
@@ -72,15 +117,24 @@ func DeleteUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Something wrong",
 		})
+		return
 	}
 
-	error := repository.Delete(id)
+	val, error := repository.Delete(id)
 
 	if error != nil {
 		fmt.Printf("Error %s", error)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Something wrong",
 		})
+		return
+	}
+
+	if val == 0 {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "User not found",
+		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

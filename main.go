@@ -16,6 +16,7 @@ func main() {
 
 	r.GET("/", controller.ShowUsers)
 	r.POST("/user", controller.AddUser)
+	r.PUT("/user/:id", controller.UpdateUser)
 	r.DELETE("/user/:id", controller.DeleteUser)
 
 	r.Run(":3333")
