@@ -50,7 +50,7 @@ func AddUser(c *gin.Context) {
 		return
 	}
 
-	err := repository.Insert(user)
+	err := repository.Insert(&user)
 
 	if err != nil {
 		fmt.Printf("Error %s", err)
@@ -86,7 +86,7 @@ func UpdateUser(c *gin.Context) {
 
 	user.Id = id
 
-	val, error := repository.Update(user)
+	val, error := repository.Update(&user)
 
 	if error != nil {
 		fmt.Printf("Error %s", error)

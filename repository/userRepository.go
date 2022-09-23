@@ -18,7 +18,7 @@ func ShowAll() (*sql.Rows, error) {
 	return rows, nil
 }
 
-func Insert(u model.User) error {
+func Insert(u *model.User) error {
 	query := "INSERT INTO users(name, email, password) VALUES (?, ?, ?)"
 	_, err := database.DBCon.Exec(query, u.Name, u.Email, u.Password)
 
@@ -29,7 +29,7 @@ func Insert(u model.User) error {
 	return nil
 }
 
-func Update(u model.User) (int64, error) {
+func Update(u *model.User) (int64, error) {
 	query := "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?"
 
 	res, err := database.DBCon.Exec(query, u.Name, u.Email, u.Password, u.Id)
