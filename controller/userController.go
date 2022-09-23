@@ -10,10 +10,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ShowUsers(c *gin.Context) {
+func NewUserController(userRepository repository.UserRepository) UserControllerInterface {
+	return &userController{userRepository}
+}
+
+type userController struct {
+	userRepository repository.UserRepository
+}
+
+type UserControllerInterface interface {
+	ShowUsers(c *gin.Context)
+	AddUser(c *gin.Context)
+	UpdateUser(c *gin.Context)
+	DeleteUser(c *gin.Context)
+}
+
+func (uc *userController) ShowUsers(c *gin.Context) {
 	var users []model.User
 
-	rows, err := repository.ShowAll()
+	rows, err := uc.userRepository.ShowAll()
 
 	if err != nil {
 		fmt.Printf("Error %s", err)
@@ -42,7 +57,7 @@ func ShowUsers(c *gin.Context) {
 	})
 }
 
-func AddUser(c *gin.Context) {
+func (uc *userController) AddUser(c *gin.Context) {
 	var user model.User
 
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -50,7 +65,7 @@ func AddUser(c *gin.Context) {
 		return
 	}
 
-	err := repository.Insert(&user)
+	err := uc.userRepository.Insert(&user)
 
 	if err != nil {
 		fmt.Printf("Error %s", err)
@@ -65,7 +80,7 @@ func AddUser(c *gin.Context) {
 	})
 }
 
-func UpdateUser(c *gin.Context) {
+func (uc *userController) UpdateUser(c *gin.Context) {
 	var user model.User
 
 	idAsString := c.Param("id")
@@ -86,7 +101,7 @@ func UpdateUser(c *gin.Context) {
 
 	user.Id = id
 
-	val, error := repository.Update(&user)
+	val, error := uc.userRepository.Update(&user)
 
 	if error != nil {
 		fmt.Printf("Error %s", error)
@@ -108,7 +123,7 @@ func UpdateUser(c *gin.Context) {
 	})
 }
 
-func DeleteUser(c *gin.Context) {
+func (uc *userController) DeleteUser(c *gin.Context) {
 	idAsString := c.Param("id")
 
 	id, err := strconv.Atoi(idAsString)
@@ -120,7 +135,7 @@ func DeleteUser(c *gin.Context) {
 		return
 	}
 
-	val, error := repository.Delete(id)
+	val, error := uc.userRepository.Delete(id)
 
 	if error != nil {
 		fmt.Printf("Error %s", error)

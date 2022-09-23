@@ -3,13 +3,27 @@ package repository
 import (
 	"database/sql"
 
-	"github.com/dannielss/goflix/database"
 	"github.com/dannielss/goflix/model"
 )
 
-func ShowAll() (*sql.Rows, error) {
+func NewUserRepository(mysqlClient *sql.DB) UserRepository {
+	return &userRepository{mysqlClient}
+}
+
+type UserRepository interface {
+	ShowAll() (*sql.Rows, error)
+	Insert(user *model.User) error
+	Update(u *model.User) (int64, error)
+	Delete(id int) (int64, error)
+}
+
+type userRepository struct {
+	mysqlClient *sql.DB
+}
+
+func (ur *userRepository) ShowAll() (*sql.Rows, error) {
 	query := "SELECT * FROM users"
-	rows, err := database.DBCon.Query(query)
+	rows, err := ur.mysqlClient.Query(query)
 
 	if err != nil {
 		return rows, err
@@ -18,9 +32,9 @@ func ShowAll() (*sql.Rows, error) {
 	return rows, nil
 }
 
-func Insert(u *model.User) error {
+func (ur *userRepository) Insert(u *model.User) error {
 	query := "INSERT INTO users(name, email, password) VALUES (?, ?, ?)"
-	_, err := database.DBCon.Exec(query, u.Name, u.Email, u.Password)
+	_, err := ur.mysqlClient.Exec(query, u.Name, u.Email, u.Password)
 
 	if err != nil {
 		return err
@@ -29,10 +43,10 @@ func Insert(u *model.User) error {
 	return nil
 }
 
-func Update(u *model.User) (int64, error) {
+func (ur *userRepository) Update(u *model.User) (int64, error) {
 	query := "UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?"
 
-	res, err := database.DBCon.Exec(query, u.Name, u.Email, u.Password, u.Id)
+	res, err := ur.mysqlClient.Exec(query, u.Name, u.Email, u.Password, u.Id)
 
 	if err != nil {
 		return 0, err
@@ -47,9 +61,9 @@ func Update(u *model.User) (int64, error) {
 	return val, nil
 }
 
-func Delete(id int) (int64, error) {
+func (ur *userRepository) Delete(id int) (int64, error) {
 	query := "DELETE FROM users WHERE id = ?"
-	res, err := database.DBCon.Exec(query, id)
+	res, err := ur.mysqlClient.Exec(query, id)
 
 	if err != nil {
 		return 0, err
