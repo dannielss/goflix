@@ -65,6 +65,8 @@ func (uc *userController) AddUser(c *gin.Context) {
 		return
 	}
 
+	user.HashPassword()
+
 	err := uc.userRepository.Insert(&user)
 
 	if err != nil {
