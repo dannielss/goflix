@@ -6,11 +6,11 @@ import (
 	"github.com/dannielss/goflix/model"
 )
 
-func NewUserRepository(mysqlClient *sql.DB) UserRepository {
+func NewUserRepository(mysqlClient *sql.DB) UserRepositoryInterface {
 	return &userRepository{mysqlClient}
 }
 
-type UserRepository interface {
+type UserRepositoryInterface interface {
 	ShowAll() (*sql.Rows, error)
 	Insert(user *model.User) error
 	Update(u *model.User) (int64, error)

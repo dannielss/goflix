@@ -13,15 +13,20 @@ func main() {
 
 	defer conn.Close()
 
-	repo := repository.NewUserRepository(conn)
-	controller := controller.NewUserController(repo)
+	userRepo := repository.NewUserRepository(conn)
+	userController := controller.NewUserController(userRepo)
+
+	categoryRepo := repository.NewCategoryRepository(conn)
+	categoryController := controller.NewCategoryController(categoryRepo)
 
 	r := gin.Default()
 
-	r.GET("/", controller.ShowUsers)
-	r.POST("/user", controller.AddUser)
-	r.PUT("/user/:id", controller.UpdateUser)
-	r.DELETE("/user/:id", controller.DeleteUser)
+	r.GET("/", userController.ShowUsers)
+	r.POST("/user", userController.AddUser)
+	r.PUT("/user/:id", userController.UpdateUser)
+	r.DELETE("/user/:id", userController.DeleteUser)
+
+	r.GET("/categories", categoryController.ShowCategories)
 
 	r.Run(":3333")
 }

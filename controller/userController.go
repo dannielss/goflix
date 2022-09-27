@@ -10,12 +10,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewUserController(userRepository repository.UserRepository) UserControllerInterface {
+func NewUserController(userRepository repository.UserRepositoryInterface) UserControllerInterface {
 	return &userController{userRepository}
 }
 
 type userController struct {
-	userRepository repository.UserRepository
+	userRepository repository.UserRepositoryInterface
 }
 
 type UserControllerInterface interface {
@@ -32,6 +32,10 @@ func (uc *userController) ShowUsers(c *gin.Context) {
 
 	if err != nil {
 		fmt.Printf("Error %s", err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Something wrong",
+		})
+		return
 	}
 
 	defer rows.Close()
