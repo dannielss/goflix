@@ -5,3 +5,14 @@ type Movie struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
+type PayloadMovie struct {
+	Movie      Movie `json:"movie"`
+	CategoryId int   `json:"category_id"`
+}
+
+type MovieWithCategory struct {
+	Id          int64
+	Title       string
+	Description string
+	Category    string
+}

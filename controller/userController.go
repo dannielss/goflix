@@ -26,7 +26,7 @@ type UserControllerInterface interface {
 }
 
 func (uc *userController) ShowUsers(c *gin.Context) {
-	var users []model.User
+	users := []model.User{}
 
 	rows, err := uc.userRepository.ShowAll()
 

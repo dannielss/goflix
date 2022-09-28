@@ -19,6 +19,9 @@ func main() {
 	categoryRepo := repository.NewCategoryRepository(conn)
 	categoryController := controller.NewCategoryController(categoryRepo)
 
+	movieRepo := repository.NewMovieRepository(conn)
+	movieController := controller.NewMovieController(movieRepo)
+
 	r := gin.Default()
 
 	r.GET("/", userController.ShowUsers)
@@ -27,6 +30,9 @@ func main() {
 	r.DELETE("/user/:id", userController.DeleteUser)
 
 	r.GET("/categories", categoryController.ShowCategories)
+
+	r.GET("/movies", movieController.ShowMovies)
+	r.POST("/movie", movieController.AddMovie)
 
 	r.Run(":3333")
 }

@@ -22,7 +22,7 @@ type CategoryControllerInterface interface {
 }
 
 func (cc *categoryController) ShowCategories(c *gin.Context) {
-	var categories []model.Category
+	categories := []model.Category{}
 
 	rows, err := cc.categoryRepository.ShowAll()
 
