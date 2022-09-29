@@ -1,6 +1,10 @@
 package repository
 
-import "database/sql"
+import (
+	"database/sql"
+
+	"github.com/dannielss/goflix/model"
+)
 
 func NewCategoryRepository(mysqlClient *sql.DB) CategoryRepositoryInterface {
 	return &categoryRepository{mysqlClient}
@@ -8,6 +12,7 @@ func NewCategoryRepository(mysqlClient *sql.DB) CategoryRepositoryInterface {
 
 type CategoryRepositoryInterface interface {
 	ShowAll() (*sql.Rows, error)
+	AddCategory(*model.Category) error
 }
 
 type categoryRepository struct {
@@ -23,4 +28,22 @@ func (cr *categoryRepository) ShowAll() (*sql.Rows, error) {
 	}
 
 	return rows, nil
+}
+
+func (cr *categoryRepository) AddCategory(category *model.Category) error {
+	query := "INSERT INTO categories (name) VALUES (?)"
+
+	stmt, err := cr.mysqlClient.Prepare(query)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(&category.Name)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

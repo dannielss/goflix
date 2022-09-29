@@ -30,7 +30,7 @@ func (mc *movieController) ShowMovies(c *gin.Context) {
 	if err != nil {
 		fmt.Printf("Error %s", err)
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Something wrong",
+			"error": err.Error(),
 		})
 		return
 	}
@@ -44,7 +44,7 @@ func (mc *movieController) ShowMovies(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "Something wrong",
+				"error": err.Error(),
 			})
 			return
 		}
@@ -70,12 +70,12 @@ func (mc *movieController) AddMovie(c *gin.Context) {
 	if err != nil {
 		fmt.Printf("Error %s", err)
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Something wrong",
+			"error": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	c.JSON(http.StatusCreated, gin.H{
 		"message": "Movie added successfuly",
 	})
 }

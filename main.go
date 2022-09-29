@@ -30,6 +30,7 @@ func main() {
 	r.DELETE("/user/:id", userController.DeleteUser)
 
 	r.GET("/categories", categoryController.ShowCategories)
+	r.POST("/category", categoryController.AddCategory)
 
 	r.GET("/movies", movieController.ShowMovies)
 	r.POST("/movie", movieController.AddMovie)

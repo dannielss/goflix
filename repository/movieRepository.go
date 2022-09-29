@@ -15,17 +15,16 @@ type MovieRepositoryInterface interface {
 	Insert(body *model.PayloadMovie) error
 }
 
-type payloadMovie struct {
-	movie      model.Movie
-	categoryId int64
-}
-
 type movieRepository struct {
 	mysqlClient *sql.DB
 }
 
 func (mr *movieRepository) ShowAll() (*sql.Rows, error) {
-	query := "SELECT B.id, B.title, B.description, C.name as category FROM movies_categories  A INNER JOIN movies B INNER JOIN categories C ON A.movie_id  = B.id AND A.category_id = C.id;"
+	query := `SELECT B.id, B.title, B.description, C.name as category 
+	FROM movies_categories A 
+	INNER JOIN movies B 
+	INNER JOIN categories C 
+	ON A.movie_id = B.id AND A.category_id = C.id;`
 
 	rows, err := mr.mysqlClient.Query(query)
 

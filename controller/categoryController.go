@@ -19,6 +19,7 @@ type categoryController struct {
 
 type CategoryControllerInterface interface {
 	ShowCategories(c *gin.Context)
+	AddCategory(c *gin.Context)
 }
 
 func (cc *categoryController) ShowCategories(c *gin.Context) {
@@ -29,7 +30,7 @@ func (cc *categoryController) ShowCategories(c *gin.Context) {
 	if err != nil {
 		fmt.Printf("Error %s", err)
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": "Something wrong",
+			"error": err.Error(),
 		})
 		return
 	}
@@ -43,7 +44,7 @@ func (cc *categoryController) ShowCategories(c *gin.Context) {
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"message": "Something wrong",
+				"error": err.Error(),
 			})
 			return
 		}
@@ -53,5 +54,28 @@ func (cc *categoryController) ShowCategories(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"categories": categories,
+	})
+}
+
+func (cc *categoryController) AddCategory(c *gin.Context) {
+	var category model.Category
+
+	if err := c.ShouldBindJSON(&category); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := cc.categoryRepository.AddCategory(&category)
+
+	if err != nil {
+		fmt.Printf("Error %s", err.Error())
+		c.JSON(http.StatusBadGateway, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "Category added successfuly",
 	})
 }
