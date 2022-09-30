@@ -11,8 +11,8 @@ type PayloadMovie struct {
 }
 
 type MovieWithCategory struct {
-	Id          int64
-	Title       string
-	Description string
-	Category    string
+	Id          int64  `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Category    string `json:"category"`
 }
