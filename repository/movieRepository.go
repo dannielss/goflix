@@ -35,6 +35,11 @@ func (mr *movieRepository) ShowAll() (*sql.Rows, error) {
 	return rows, nil
 }
 
+type output struct {
+	Id  int64
+	err error
+}
+
 func (mr *movieRepository) Insert(body *model.PayloadMovie) error {
 	out := make(chan output)
 
@@ -97,9 +102,4 @@ func (mr *movieRepository) Insert(body *model.PayloadMovie) error {
 	}
 
 	return nil
-}
-
-type output struct {
-	Id  int64
-	err error
 }
