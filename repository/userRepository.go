@@ -11,6 +11,7 @@ func NewUserRepository(mysqlClient *sql.DB) UserRepositoryInterface {
 }
 
 type UserRepositoryInterface interface {
+	ShowOne(string, string) *sql.Row
 	ShowAll() (*sql.Rows, error)
 	Insert(user *model.User) error
 	Update(u *model.User) (int64, error)
@@ -19,6 +20,13 @@ type UserRepositoryInterface interface {
 
 type userRepository struct {
 	mysqlClient *sql.DB
+}
+
+func (ur *userRepository) ShowOne(where string, value string) *sql.Row {
+	query := "SELECT * FROM users WHERE " + where
+	row := ur.mysqlClient.QueryRow(query, value)
+
+	return row
 }
 
 func (ur *userRepository) ShowAll() (*sql.Rows, error) {
