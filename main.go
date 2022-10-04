@@ -15,6 +15,7 @@ func main() {
 
 	userRepo := repository.NewUserRepository(conn)
 	userController := controller.NewUserController(userRepo)
+	loginController := controller.NewLoginController(userRepo)
 
 	categoryRepo := repository.NewCategoryRepository(conn)
 	categoryController := controller.NewCategoryController(categoryRepo)
@@ -24,7 +25,9 @@ func main() {
 
 	r := gin.Default()
 
-	r.GET("/", userController.ShowUsers)
+	r.POST("/login", loginController.Login)
+
+	r.GET("/users", userController.ShowUsers)
 	r.POST("/user", userController.AddUser)
 	r.PUT("/user/:id", userController.UpdateUser)
 	r.DELETE("/user/:id", userController.DeleteUser)
