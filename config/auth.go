@@ -20,11 +20,11 @@ func NewJWTConfig() *jwtConfig {
 }
 
 type Claim struct {
-	Sum int64 `json:"sum"`
+	Sum int `json:"sum"`
 	jwt.StandardClaims
 }
 
-func (c *jwtConfig) GenerateToken(id int64) (string, error) {
+func (c *jwtConfig) GenerateToken(id int) (string, error) {
 	claim := &Claim{
 		id,
 		jwt.StandardClaims{
