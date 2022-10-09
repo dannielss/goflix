@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/dannielss/goflix/controller"
+	"github.com/dannielss/goflix/controllers"
 	"github.com/dannielss/goflix/database"
-	"github.com/dannielss/goflix/repository"
+	"github.com/dannielss/goflix/middlewares"
+	"github.com/dannielss/goflix/repositories"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -13,22 +14,24 @@ func main() {
 
 	defer conn.Close()
 
-	userRepo := repository.NewUserRepository(conn)
-	userController := controller.NewUserController(userRepo)
-	loginController := controller.NewLoginController(userRepo)
+	userRepo := repositories.NewUserRepository(conn)
+	userController := controllers.NewUserController(userRepo)
+	loginController := controllers.NewLoginController(userRepo)
 
-	categoryRepo := repository.NewCategoryRepository(conn)
-	categoryController := controller.NewCategoryController(categoryRepo)
+	categoryRepo := repositories.NewCategoryRepository(conn)
+	categoryController := controllers.NewCategoryController(categoryRepo)
 
-	movieRepo := repository.NewMovieRepository(conn)
-	movieController := controller.NewMovieController(movieRepo)
+	movieRepo := repositories.NewMovieRepository(conn)
+	movieController := controllers.NewMovieController(movieRepo)
 
 	r := gin.Default()
 
 	r.POST("/login", loginController.Login)
+	r.POST("/user", userController.AddUser)
+
+	r.Use(middlewares.Auth())
 
 	r.GET("/users", userController.ShowUsers)
-	r.POST("/user", userController.AddUser)
 	r.PUT("/user/:id", userController.UpdateUser)
 	r.DELETE("/user/:id", userController.DeleteUser)
 
