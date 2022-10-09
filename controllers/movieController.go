@@ -1,20 +1,20 @@
-package controller
+package controllers
 
 import (
 	"fmt"
 	"net/http"
 
 	"github.com/dannielss/goflix/model"
-	"github.com/dannielss/goflix/repository"
+	"github.com/dannielss/goflix/repositories"
 	"github.com/gin-gonic/gin"
 )
 
-func NewMovieController(movieRepository repository.MovieRepositoryInterface) MovieControllerInterface {
+func NewMovieController(movieRepository repositories.MovieRepositoryInterface) MovieControllerInterface {
 	return &movieController{movieRepository}
 }
 
 type movieController struct {
-	movieRepository repository.MovieRepositoryInterface
+	movieRepository repositories.MovieRepositoryInterface
 }
 
 type MovieControllerInterface interface {

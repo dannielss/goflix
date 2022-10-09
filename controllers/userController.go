@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"fmt"
@@ -6,16 +6,16 @@ import (
 	"strconv"
 
 	"github.com/dannielss/goflix/model"
-	"github.com/dannielss/goflix/repository"
+	"github.com/dannielss/goflix/repositories"
 	"github.com/gin-gonic/gin"
 )
 
-func NewUserController(userRepository repository.UserRepositoryInterface) UserControllerInterface {
+func NewUserController(userRepository repositories.UserRepositoryInterface) UserControllerInterface {
 	return &userController{userRepository}
 }
 
 type userController struct {
-	userRepository repository.UserRepositoryInterface
+	userRepository repositories.UserRepositoryInterface
 }
 
 type UserControllerInterface interface {

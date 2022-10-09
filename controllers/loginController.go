@@ -1,4 +1,4 @@
-package controller
+package controllers
 
 import (
 	"database/sql"
@@ -6,17 +6,17 @@ import (
 
 	"github.com/dannielss/goflix/config"
 	"github.com/dannielss/goflix/model"
-	"github.com/dannielss/goflix/repository"
+	"github.com/dannielss/goflix/repositories"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func NewLoginController(userRepository repository.UserRepositoryInterface) LoginControllerInterface {
+func NewLoginController(userRepository repositories.UserRepositoryInterface) LoginControllerInterface {
 	return &loginController{userRepository}
 }
 
 type loginController struct {
-	userRepository repository.UserRepositoryInterface
+	userRepository repositories.UserRepositoryInterface
 }
 
 type LoginControllerInterface interface {

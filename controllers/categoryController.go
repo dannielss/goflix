@@ -1,20 +1,20 @@
-package controller
+package controllers
 
 import (
 	"fmt"
 	"net/http"
 
 	"github.com/dannielss/goflix/model"
-	"github.com/dannielss/goflix/repository"
+	"github.com/dannielss/goflix/repositories"
 	"github.com/gin-gonic/gin"
 )
 
-func NewCategoryController(categoryRepository repository.CategoryRepositoryInterface) CategoryControllerInterface {
+func NewCategoryController(categoryRepository repositories.CategoryRepositoryInterface) CategoryControllerInterface {
 	return &categoryController{categoryRepository}
 }
 
 type categoryController struct {
-	categoryRepository repository.CategoryRepositoryInterface
+	categoryRepository repositories.CategoryRepositoryInterface
 }
 
 type CategoryControllerInterface interface {
