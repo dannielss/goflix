@@ -95,10 +95,10 @@ func (mr *movieRepository) Insert(body *model.PayloadMovie) error {
 		return hasError
 	}
 
-	lastError := transaction.Commit()
+	commitError := transaction.Commit()
 
-	if lastError != nil {
-		return lastError
+	if commitError != nil {
+		return commitError
 	}
 
 	return nil

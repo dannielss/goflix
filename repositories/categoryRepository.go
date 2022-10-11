@@ -39,10 +39,10 @@ func (cr *categoryRepository) AddCategory(category *model.Category) error {
 		return err
 	}
 
-	_, err = stmt.Exec(&category.Name)
+	_, execError := stmt.Exec(&category.Name)
 
-	if err != nil {
-		return err
+	if execError != nil {
+		return execError
 	}
 
 	return nil
